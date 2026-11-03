@@ -4,6 +4,7 @@ on:
     branches: [phase0-dynamorio]
 jobs:
   a:
+    if: false
     strategy:
       fail-fast: false
       matrix:
@@ -19,6 +20,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with: { name: "out-${{ matrix.script }}", path: out }
   b:
+    if: false
     strategy:
       fail-fast: false
       matrix:
@@ -39,7 +41,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        script: [d-density, e-persist, c-bundle]
+        script: [d-density]
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     steps:
