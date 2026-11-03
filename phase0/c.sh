@@ -3,7 +3,7 @@
 TF=$'real %R user %U sys %S'
 echo "== cpu"; grep -m1 'model name' /proc/cpuinfo; grep -m1 flags /proc/cpuinfo | tr ' ' '\n' | grep -E '^(avx|avx2|fma|bmi1|bmi2|f16c|movbe|abm|sse4_2)$' | tr '\n' ' '; echo
 echo "== dr install"; mkdir -p /dr && curl -fsSL --retry 5 https://github.com/DynamoRIO/dynamorio/releases/download/release_11.3.0-1/DynamoRIO-Linux-11.3.0.tar.gz | tar -xz -C /dr
-D=/dr/DynamoRIO-Linux-11.3.0/bin64/drrun; export HOME=/tmp
+D=/dr/DynamoRIO-Linux-11.3.0-1/bin64/drrun; export HOME=/tmp
 echo "== drrun version"; $D -version 2>&1 | head -2
 echo "== drrun -- /bin/true"; $D -- /bin/true; echo rc=$?
 echo "== drrun -- /bin/echo hi"; $D -- /bin/echo hi; echo rc=$?

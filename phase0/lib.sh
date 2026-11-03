@@ -7,7 +7,7 @@ OUT=${OUT:-$ROOT/out}; mkdir -p "$OUT"
 WK=$ROOT/work; mkdir -p "$WK"
 SUM=$OUT/summary.md
 DR_TAG=release_11.3.0-1; DR_VER=11.3.0
-DR=$ROOT/dr/DynamoRIO-Linux-$DR_VER
+DR=$ROOT/dr/DynamoRIO-Linux-$DR_VER-1
 DRRUN=$DR/bin64/drrun
 DUCKDB_IMG='duckdb/duckdb:2.0.0@sha256:453caf4f1c445ee8363acaa6cd383751396d2eae0d02f362ada64d87267a4221'
 export DRRUN OUT
