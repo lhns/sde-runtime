@@ -4,8 +4,9 @@ Runs container images that need x86-64-v3 (AVX2, BMI2, FMA) on older CPUs under
 [Intel SDE](https://www.intel.com/content/www/us/en/developer/articles/tool/software-development-emulator.html),
 through an OCI runtime wrapper for containerd + runc (Kubernetes).
 
-**SDE is a slow fallback, not a fast path.** It is a binary translator: expect seconds of startup and
-compute tens of times slower than native (measured on one image; your workload will differ). Use it to
+**SDE is a slow fallback, not a fast path.** It is a binary translator: expect tens of seconds of startup and
+compute 35-80 times slower than native (measured on DuckDB; your workload will differ). Exec probes
+start under SDE too, so give them generous timeouts. Use it to
 let a pod run on an old node at all, not to run heavy pods there.
 
 ## How it works
