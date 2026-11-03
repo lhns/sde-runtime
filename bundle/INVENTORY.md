@@ -10,9 +10,8 @@ SDE and Pin licenses forbid modification.
   them with its own loader, so `pinbin`'s PT_INTERP is not used.
 - **Needs the container's glibc through PT_INTERP** (`sde64`, `pinrt/pind`): fail in an image without
   `/lib64/ld-linux-x86-64.so.2`. Tested without patching: glibc distroless runs `sde64` as is; an
-  image with no libc runs `/sde/pin` directly, with `-pind_path_64` pointing at a static launcher
-  that starts `pind` through the bundled loader, and `SDE_GDB_XML` set as `sde64` would set it.
-- **Not used at runtime**: `xed64`, `sde_cntrl_client`, `nullapp`, `xed_ext_lib/*`.
+  image with no libc runs `/sde/pin` directly, with `-pind_path_64` pointing at `pind-shim`, and `SDE_GDB_XML` set as `sde64` would set it.
+- **Not exec'd in the tested `-hsw --` path**: `xed64`, `sde_cntrl_client`, `nullapp`, `xed_ext_lib/*`.
 
 ## Files
 

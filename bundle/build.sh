@@ -30,9 +30,9 @@ EOF
     exit 1
 fi
 
-if ! command -v xz >/dev/null || ! command -v curl >/dev/null; then
+if ! command -v xz >/dev/null || ! command -v curl >/dev/null || ! command -v gcc >/dev/null; then
     apt-get update -qq
-    apt-get install -y -qq --no-install-recommends ca-certificates curl xz-utils
+    apt-get install -y -qq --no-install-recommends ca-certificates curl gcc libc6-dev xz-utils
 fi
 
 work=$(mktemp -d)
@@ -47,10 +47,11 @@ rm -rf "$out/sde"
 mkdir -p "$out/sde/lib"
 tar -xJf "$tarball" -C "$out/sde" --strip-components=1
 
-# Baseline glibc for images without a usable loader: run pind through it, not patched to it.
+# For images without a usable glibc: pind-shim runs pind through this baseline glibc.
 libdir=/lib/x86_64-linux-gnu
 for lib in ld-linux-x86-64.so.2 libc.so.6 libm.so.6 libdl.so.2 libpthread.so.0 librt.so.1; do
     cp -L "$libdir/$lib" "$out/sde/lib/"
 done
+gcc -O2 -static -o "$out/sde/pind-shim" "$(dirname "$0")/pind-shim.c"
 chmod -R a+rX "$out/sde"
 echo "built $out/sde"
