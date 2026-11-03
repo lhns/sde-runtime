@@ -98,3 +98,7 @@ force_on_capable_host = false            # testing: wrap even on x86-64-v3
 `test/probe` exits 0 only if AVX2, FMA and BMI2 instructions return correct results. An end-to-end run
 needs the SDE bundle (not available in CI) and a node without AVX2 (for example
 `qemu -cpu IvyBridge`); it is not automated.
+
+## License
+
+The wrapper is licensed under [Apache-2.0](LICENSE). Intel SDE is not part of this repo and has its own license.
