@@ -54,6 +54,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with: { name: "out-${{ matrix.script }}", path: out }
   gohang:
+    if: false
     strategy:
       fail-fast: false
       matrix:
@@ -85,3 +86,16 @@ jobs:
       - if: always()
         uses: actions/upload-artifact@v4
         with: { name: "out-goevidence-${{ matrix.variant }}", path: out }
+  gohang2:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: { go-version: stable }
+      - run: bash phase0/gohang2.sh
+      - if: always()
+        run: cat out/summary.md >> "$GITHUB_STEP_SUMMARY" || true
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: "out-gohang2", path: out }

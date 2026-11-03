@@ -50,6 +50,23 @@ func main() {
 		}
 		atomic.StoreInt32(&stop, 1)
 		fmt.Println("ok")
+	case "spincoop": // same, but the loop calls a function: cooperative preemption suffices
+		runtime.GOMAXPROCS(4)
+		var stop int32
+		for i := 0; i < 8; i++ {
+			go func() {
+				x := 0
+				for atomic.LoadInt32(&stop) == 0 {
+					x = inc(x)
+				}
+			}()
+		}
+		for i := 0; i < 5; i++ {
+			runtime.GC()
+			time.Sleep(20 * time.Millisecond)
+		}
+		atomic.StoreInt32(&stop, 1)
+		fmt.Println("ok")
 	case "signal":
 		usr := make(chan os.Signal, 1)
 		signal.Notify(usr, syscall.SIGUSR1, syscall.SIGURG)
@@ -68,3 +85,6 @@ func main() {
 		fmt.Println("ok", string(b))
 	}
 }
+
+//go:noinline
+func inc(x int) int { return x + 1 }
