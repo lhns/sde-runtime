@@ -1,0 +1,52 @@
+name: phase0-dynamorio
+on:
+  push:
+    branches: [phase0-dynamorio]
+jobs:
+  a:
+    strategy:
+      fail-fast: false
+      matrix:
+        script: [a-duckdb, a-other]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash phase0/${{ matrix.script }}.sh
+      - if: always()
+        run: cat out/summary.md >> "$GITHUB_STEP_SUMMARY" || true
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: "out-${{ matrix.script }}", path: out }
+  b:
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [direct, docker, dockernp]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: { go-version: stable }
+      - run: bash phase0/b.sh ${{ matrix.mode }}
+      - if: always()
+        run: cat out/summary.md >> "$GITHUB_STEP_SUMMARY" || true
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: "out-b-${{ matrix.mode }}", path: out }
+  dec:
+    strategy:
+      fail-fast: false
+      matrix:
+        script: [d-density, e-persist, c-bundle]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash phase0/${{ matrix.script }}.sh
+      - if: always()
+        run: cat out/summary.md >> "$GITHUB_STEP_SUMMARY" || true
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: "out-${{ matrix.script }}", path: out }
