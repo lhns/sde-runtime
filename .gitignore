@@ -1,0 +1,4 @@
+*.tar.xz
+*.tar.gz
+bundle/out/
+test/probe/probe
