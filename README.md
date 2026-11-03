@@ -5,8 +5,9 @@ Runs container images that need x86-64-v3 (AVX2, BMI2, FMA) on older CPUs under
 through an OCI runtime wrapper for containerd + runc (Kubernetes).
 
 **SDE is a slow fallback, not a fast path.** It is a binary translator: expect tens of seconds of startup and
-compute 35-80 times slower than native (measured on DuckDB; your workload will differ). Exec probes
-start under SDE too, so give them generous timeouts. Use it to
+compute 35-80 times slower than native (measured on DuckDB; your workload will differ). Every
+process started in a wrapped container pays that startup, `kubectl exec` and exec probes included, so
+use HTTP or TCP probes and a startup probe that allows for it. Use it to
 let a pod run on an old node at all, not to run heavy pods there.
 
 ## How it works
