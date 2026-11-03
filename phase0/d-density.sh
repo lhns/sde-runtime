@@ -11,11 +11,11 @@ Q_FULL="select sum(range*range) from range(3000000)"
 for q in "select 42" "$Q_FULL"; do
   n=$(echo "$q" | md5sum | cut -c1-6)
   echo "--- opcode_mix: $q"
-  ( time timeout 2400 "$DRRUN" -t drcachesim -simulator_type opcode_mix -- "$WK/duckdb" -c "$q" ) > "opmix-$n.txt" 2>&1
+  ( time timeout 2400 "$DRRUN" -t drcachesim -instr_encodings -simulator_type opcode_mix -- "$WK/duckdb" -c "$q" ) > "opmix-$n.txt" 2>&1
   tail -5 "opmix-$n.txt"; cp "opmix-$n.txt" "$OUT/online-$n.txt"
   if ! grep -qE '^\s*[0-9]+\s*:\s*[a-z]' "opmix-$n.txt"; then
     echo "online failed or unparsable; trying offline"
-    rm -rf drmem.*; ( time timeout 2400 "$DRRUN" -t drcachesim -offline -outdir "$WK/tr-$n" -- "$WK/duckdb" -c "$q" ) > "offline-$n.txt" 2>&1; tail -3 "offline-$n.txt"; cp "offline-$n.txt" "$OUT/offline-$n.txt"; ls -R "$WK/tr-$n" | head -20
+    rm -rf drmem.*; mkdir -p "$WK/tr-$n"; ( time timeout 2400 "$DRRUN" -t drcachesim -offline -outdir "$WK/tr-$n" -- "$WK/duckdb" -c "$q" ) > "offline-$n.txt" 2>&1; tail -3 "offline-$n.txt"; cp "offline-$n.txt" "$OUT/offline-$n.txt"; ls -R "$WK/tr-$n" | head -20
     ( time timeout 2400 "$DRRUN" -t drcachesim -indir "$WK"/tr-$n/drmemtrace.* -simulator_type opcode_mix ) > "opmix-$n.txt" 2>&1; tail -5 "opmix-$n.txt"
   fi
   cp "opmix-$n.txt" "$OUT/opmix-$n.txt"
