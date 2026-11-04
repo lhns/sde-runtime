@@ -219,10 +219,10 @@ static void movbe_case(void) {
         printf("movbe                  skipped (no MOVBE)\n");
         return;
     }
-    // movbe 0x1000(%rip),%rax; mov %rax,0x1000(%rip): data on another page than the code.
+    // movbe 0x1000(%rip),%rax; mov %rax,0x1010(%rip): data on another page than the code.
     static const uint8_t code[] = {0x66, 0x48, 0x0f, 0x38, 0xf0, 0x05, 0x00, 0x10, 0x00, 0x00,
-                                   0x48, 0x89, 0x05, 0x00, 0x10, 0x00, 0x00};
-    uint64_t *src = (uint64_t *)(page + 10 + 0x1000), *dst = (uint64_t *)(page + 17 + 0x1000);
+                                   0x48, 0x89, 0x05, 0x10, 0x10, 0x00, 0x00};
+    uint64_t *src = (uint64_t *)(page + 10 + 0x1000), *dst = (uint64_t *)(page + 17 + 0x1010);
     const uint64_t want = 0x8877665544332211ull;
     uint64_t got = 0;
     int fails = 0, total = 0;

@@ -16,6 +16,7 @@ cmake --build "$B" -j4 >"$OUT/build.log" 2>&1 || { tail -40 "$OUT/build.log"; ex
 ( cd "$B" && timeout 2400 ctest -j2 --timeout 300 -R 'linux\.(signal|sigplain|thread)' -E 'decode-bad' ) > "$OUT/ctest.txt" 2>&1
 grep -E 'Test +#[0-9]+:' "$OUT/ctest.txt" | sed -E 's/^.*Test +#[0-9]+: //; s/ \.+\**/ /; s/ +[0-9.]+ sec$//' | sort > "$OUT/ctest-results.txt"
 tail -3 "$OUT/ctest.txt"
+( cd "$B" && timeout 900 ctest --timeout 600 -R 'api\.ir' ) > "$OUT/ctest-ir.txt" 2>&1; tail -6 "$OUT/ctest-ir.txt"
 if [ "$SIDE" = patched ] && [ "$BT" = release ]; then N=200; else N=30; fi
 export N PROOF=1 DR_PATCHED=$B
 bash "$P0/gohang4.sh"

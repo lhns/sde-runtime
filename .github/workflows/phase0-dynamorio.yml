@@ -134,7 +134,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with: { name: out-gohang4, path: "out/gohang4*" }
   drfix:
-    if: false
     strategy:
       fail-fast: false
       matrix:
@@ -175,23 +174,21 @@ jobs:
         uses: actions/upload-artifact@v4
         with: { name: "out-gohang5-${{ matrix.mode }}", path: out }
   gohang6:
-    if: false
     strategy:
       fail-fast: false
       matrix:
-        mode: ["patched/-/churn/asyncpreemptoff=1/-"]
+        mode: ["patched/-/spin/-/-"]
     runs-on: ubuntu-24.04
     timeout-minutes: 200
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with: { go-version: stable }
-      - run: bash phase0/gohang6.sh "${{ matrix.mode }}"
+      - run: N=200 bash phase0/gohang6.sh "${{ matrix.mode }}"
       - if: always()
         uses: actions/upload-artifact@v4
         with: { name: "out-gohang6-${{ strategy.job-index }}", path: out }
   ofloss:
-    if: false
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     steps:
@@ -201,16 +198,15 @@ jobs:
         uses: actions/upload-artifact@v4
         with: { name: out-ofloss, path: out }
   exitrace:
-    if: false
     strategy:
       fail-fast: false
       matrix:
-        side: [native, stock, fork]
+        side: [fork]
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
-      - run: bash phase0/exitrace.sh ${{ matrix.side }}
+      - run: N=100 bash phase0/exitrace.sh ${{ matrix.side }}
       - if: always()
         run: cat out/summary.md >> "$GITHUB_STEP_SUMMARY" || true
       - if: always()

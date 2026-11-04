@@ -37,9 +37,10 @@ sudo systemd-run --scope -q -p MemoryMax=8G -p TasksMax=20000 -p MemorySwapMax=0
   timeout -k 5 90 $PRE ./exitrace 0 >"$R/uncapped.out" 2>"$R/uncapped.err" & up=$!
 for s in $(seq 1 95); do sleep 1
   p=$(pgrep -n -f '[.]/exitrace 0'); [ -n "$p" ] || continue
-  echo "$s threads=$(ls /proc/$p/task 2>/dev/null | wc -l) rssKB=$(awk '/VmRSS/{print $2}' /proc/$p/status 2>/dev/null) vmKB=$(awk '/VmSize/{print $2}' /proc/$p/status 2>/dev/null) availKB=$(awk '/MemAvailable/{print $2}' /proc/meminfo)"
+  echo "$s threads=$(ls /proc/$p/task 2>/dev/null | wc -l) maps=$(sudo wc -l < /proc/$p/maps) rssKB=$(awk '/VmRSS/{print $2}' /proc/$p/status 2>/dev/null) vmKB=$(awk '/VmSize/{print $2}' /proc/$p/status 2>/dev/null) availKB=$(awk '/MemAvailable/{print $2}' /proc/meminfo)"
   kill -0 $up 2>/dev/null || break
+  [ $s = 30 ] && { sysctl vm.max_map_count; sudo cat /proc/$p/task/*/syscall | cut -d' ' -f1 | sort | uniq -c | sort -rn | head -8; sudo cat /proc/$p/task/*/stack | sort | uniq -c | sort -rn | head -12; } > "$R/uncapped.hang" 2>&1
 done > "$R/uncapped.samples"
 wait $up; echo "uncapped rc=$?" | tee -a "$SUM"
 awk 'NR%10==1' "$R/uncapped.samples" | tee -a "$SUM"; tail -3 "$R/uncapped.samples" | tee -a "$SUM"; tail -5 "$R/uncapped.err" | cut -c1-300 | tee -a "$SUM"; cat "$R/uncapped.out" | tee -a "$SUM"
-sudo dmesg | tail -5 | cut -c1-200 | tee -a "$SUM"
+cat "$R/uncapped.hang" | cut -c1-120 | tee -a "$SUM"; sudo dmesg | grep -iE 'oom|killed|map_count' | tail -5 | cut -c1-200 | tee -a "$SUM"
