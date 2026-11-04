@@ -11,7 +11,7 @@ else git clone -q --depth 1 -b $DR_TAG https://github.com/DynamoRIO/dynamorio.gi
 git -C "$S" submodule update -q --init --depth 1 --recommend-shallow || exit 1
 git -C "$S" log --oneline -1 | tee "$OUT/source.txt"
 [ "$BT" = debug ] && DBG=ON || DBG=OFF
-cmake -S "$S" -B "$B" -DDEBUG=$DBG -DBUILD_TESTS=ON -DBUILD_DOCS=OFF -DBUILD_SAMPLES=OFF -DBUILD_CLIENTS=OFF >"$OUT/cmake.log" 2>&1 || { tail -30 "$OUT/cmake.log"; exit 1; }
+cmake -S "$S" -B "$B" -DDEBUG=$DBG -DBUILD_TESTS=ON -DBUILD_DOCS=OFF -DBUILD_SAMPLES=OFF >"$OUT/cmake.log" 2>&1 || { tail -30 "$OUT/cmake.log"; exit 1; }
 cmake --build "$B" -j4 >"$OUT/build.log" 2>&1 || { tail -40 "$OUT/build.log"; exit 1; }
 ( cd "$B" && timeout 2400 ctest -j2 --timeout 300 -R 'linux\.(signal|sigplain|thread)' -E 'decode-bad' ) > "$OUT/ctest.txt" 2>&1
 grep -E 'Test +#[0-9]+:' "$OUT/ctest.txt" | sed -E 's/^.*Test +#[0-9]+: //; s/ \.+\**/ /; s/ +[0-9.]+ sec$//' | sort > "$OUT/ctest-results.txt"
