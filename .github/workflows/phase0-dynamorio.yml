@@ -178,7 +178,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        mode: ["patched/-/spin/-/-", "patched/-thread_private/spin/-/-", "base/-/spin1/-/-", "base/-/spincoop/asyncpreemptoff=1/-"]
+        mode: ["patched/-/spin/-/-"]
     runs-on: ubuntu-24.04
     timeout-minutes: 200
     steps:

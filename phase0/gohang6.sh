@@ -23,8 +23,8 @@ cd "$WK"; R=$OUT/$LABEL; mkdir -p "$R"
 snap() { local p=$1 f=$2 t live
   { ps -L -o tid,stat,pcpu,comm -p $p
     for t in /proc/$p/task/*; do echo "## $(basename $t) $(cut -d' ' -f3,14,15 $t/stat)"; sudo cat $t/syscall; sudo cat $t/stack | head -12; done
-    live=$(ps -L -o tid=,stat= -p $p | awk '$2!~/^Z/{print $1; exit}')
-    sudo timeout 90 gdb -batch -p $live -ex 'set pagination off' -ex 'info threads' -ex 'print change_linking_lock' -ex 'print bb_building_lock' -ex 'print thread_initexit_lock' -ex 'print all_threads_synch_lock' -ex 'print interrupted_shared_threads' -ex 'thread apply all info registers rip rax rdi' -ex 'thread apply all bt 24'; } > "$f" 2>&1; }
+    for live in $(ps -L -o tid=,stat= -p $p | awk '$2!~/^Z/{print $1}'); do echo "#### gdb tid $live"
+      sudo timeout 60 gdb -batch -p $live -ex 'set pagination off' -ex 'print change_linking_lock' -ex 'print all_threads_synch_lock' -ex 'print uninit_thread_count' -ex 'print dynamo_exited' -ex 'info registers rip rsp' -ex 'x/6i $pc' -ex 'bt 24' 2>&1 | grep -v '^warning\|^\[\|^$'; done; } > "$f" 2>&1; }
 _one() { local i=$1 p w=0 rc; $PRE $BIN $ARG >"$R/out.$i" 2>"$R/err.$i" & p=$!
   while kill -0 $p 2>/dev/null && [ $w -lt $((T*10)) ]; do sleep 0.1; w=$((w+1)); done
   if kill -0 $p 2>/dev/null; then
