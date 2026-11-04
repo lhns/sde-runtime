@@ -174,3 +174,18 @@ jobs:
       - if: always()
         uses: actions/upload-artifact@v4
         with: { name: "out-gohang5-${{ matrix.mode }}", path: out }
+  gohang6:
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: ["patched/-/spin/-/-", "patched/-thread_private/spin/-/-", "base/-/spin1/-/-", "base/-/spincoop/asyncpreemptoff=1/-"]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 200
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: { go-version: stable }
+      - run: bash phase0/gohang6.sh "${{ matrix.mode }}"
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: "out-gohang6-${{ strategy.job-index }}", path: out }
