@@ -134,7 +134,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with: { name: out-gohang4, path: "out/gohang4*" }
   drfix:
-    if: false
     strategy:
       fail-fast: false
       matrix:
@@ -178,7 +177,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        mode: ["patched/-/spin/-/-"]
+        mode: ["patched/-/spin/-/-", "patched/-/spin/-/_v3", "native/-/spin/-/-", "native/-/spin/-/_v3", "base/-/x/-/exitrace", "patched/-/x/-/exitrace", "native/-/x/-/exitrace", "base/-/churn/asyncpreemptoff=1/-"]
     runs-on: ubuntu-24.04
     timeout-minutes: 200
     steps:

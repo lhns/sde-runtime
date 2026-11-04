@@ -78,6 +78,22 @@ func main() {
 		close(gate)
 		wg.Wait()
 		fmt.Println("ok")
+	case "churn": // scheduler churn and GC with no need for signals, under asyncpreemptoff=1
+		runtime.GOMAXPROCS(4)
+		var stop int32
+		for i := 0; i < 8; i++ {
+			go func() {
+				for atomic.LoadInt32(&stop) == 0 {
+					runtime.Gosched()
+				}
+			}()
+		}
+		for i := 0; i < 5; i++ {
+			runtime.GC()
+			time.Sleep(20 * time.Millisecond)
+		}
+		atomic.StoreInt32(&stop, 1)
+		fmt.Println("ok")
 	case "spincoop": // same, but the loop calls a function: cooperative preemption suffices
 		runtime.GOMAXPROCS(4)
 		var stop int32
