@@ -126,9 +126,33 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with: { go-version: stable }
-      - run: bash phase0/gohang4.sh
+      - run: LOGONLY=1 bash phase0/gohang4.sh
       - if: always()
         run: cat out/summary.md >> "$GITHUB_STEP_SUMMARY" || true
       - if: always()
         uses: actions/upload-artifact@v4
         with: { name: out-gohang4, path: "out/gohang4*" }
+  drfix:
+    strategy:
+      fail-fast: false
+      matrix:
+        side: [base, patched]
+        build: [release, debug]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: { go-version: stable }
+      - run: bash phase0/drfix.sh ${{ matrix.side }} ${{ matrix.build }}
+      - if: always()
+        run: cat out/summary.md >> "$GITHUB_STEP_SUMMARY" || true
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: out-drfix-${{ matrix.side }}-${{ matrix.build }}
+          path: |
+            out/*.txt
+            out/*.tsv
+            out/*.log
+            out/gohang4/table.tsv

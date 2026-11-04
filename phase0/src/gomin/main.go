@@ -67,6 +67,17 @@ func main() {
 		}
 		atomic.StoreInt32(&stop, 1)
 		fmt.Println("ok")
+	case "threads": // about 100 OS threads alive at once
+		var wg sync.WaitGroup
+		gate := make(chan struct{})
+		for i := 0; i < 100; i++ {
+			wg.Add(1)
+			go func() { defer wg.Done(); runtime.LockOSThread(); <-gate }()
+		}
+		time.Sleep(200 * time.Millisecond)
+		close(gate)
+		wg.Wait()
+		fmt.Println("ok")
 	case "spincoop": // same, but the loop calls a function: cooperative preemption suffices
 		runtime.GOMAXPROCS(4)
 		var stop int32
