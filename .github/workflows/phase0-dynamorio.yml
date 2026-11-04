@@ -102,6 +102,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with: { name: "out-gohang2", path: out }
   gohang3:
+    if: false
     strategy:
       fail-fast: false
       matrix:

@@ -30,7 +30,7 @@ runs go.spin.default "" ./gomin spin
 E=$OUT/gohang4-log; mkdir -p "$E"; LD=$WK/drlogs
 for a in $(seq 1 100); do
   rm -rf "$LD"; mkdir -p "$LD"
-  timeout -s KILL 120 $DRRUN -debug -loglevel 3 -logmask 0x400 -logdir "$LD" -- ./sigspin 8 $ROUNDS 20 > "$E/out.txt" 2>&1; rc=$?
+  timeout -s KILL 120 $DRRUN -debug -loglevel 3 -logmask 0x10 -logdir "$LD" -- ./sigspin 8 $ROUNDS 20 > "$E/out.txt" 2>&1; rc=$?
   [ $rc = 3 ] || continue
   echo "HANG on debug attempt $a" | tee -a "$SUM"; cat "$E/out.txt" | tee -a "$SUM"
   find "$LD" -name 'log.*' | tee "$E/logs.txt"
