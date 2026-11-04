@@ -134,6 +134,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with: { name: out-gohang4, path: "out/gohang4*" }
   drfix:
+    if: false
     strategy:
       fail-fast: false
       matrix:
@@ -157,3 +158,18 @@ jobs:
             out/*.tsv
             out/*.log
             out/gohang4/table.tsv
+  gohang5:
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [patched, thread_private, native]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: { go-version: stable }
+      - run: bash phase0/gohang5.sh ${{ matrix.mode }}
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: "out-gohang5-${{ matrix.mode }}", path: out }
