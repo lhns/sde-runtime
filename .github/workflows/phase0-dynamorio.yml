@@ -120,6 +120,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with: { name: "out-gohang3-${{ matrix.mode }}", path: out }
   gohang4:
+    if: false
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     steps:
@@ -136,7 +137,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        side: [base, patched]
+        side: [patched]
         build: [release, debug]
     runs-on: ubuntu-24.04
     timeout-minutes: 240
