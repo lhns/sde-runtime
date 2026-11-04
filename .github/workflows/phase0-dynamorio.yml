@@ -118,3 +118,16 @@ jobs:
       - if: always()
         uses: actions/upload-artifact@v4
         with: { name: "out-gohang3-${{ matrix.mode }}", path: out }
+  gohang4:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: { go-version: stable }
+      - run: bash phase0/gohang4.sh
+      - if: always()
+        run: cat out/summary.md >> "$GITHUB_STEP_SUMMARY" || true
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: out-gohang4, path: "out/gohang4*" }
