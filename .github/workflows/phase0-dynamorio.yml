@@ -159,6 +159,7 @@ jobs:
             out/*.log
             out/gohang4/table.tsv
   gohang5:
+    if: false
     strategy:
       fail-fast: false
       matrix:
