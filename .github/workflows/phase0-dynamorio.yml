@@ -162,7 +162,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        mode: [patched, thread_private, native]
+        mode: [patched, thread_private, stock]
     runs-on: ubuntu-24.04
     timeout-minutes: 180
     steps:
