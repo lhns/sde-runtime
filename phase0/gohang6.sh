@@ -19,8 +19,7 @@ fi
 [ "$GD" = - ] || export GODEBUG=$GD
 cd "$WK"; R=$OUT/$LABEL; mkdir -p "$R"
 ( cd "$P0/src/gomin" && CGO_ENABLED=0 go build -o "$WK/gomin" main.go && CGO_ENABLED=0 GOAMD64=v3 go build -o "$WK/gomin_v3" main.go ) || exit 1
-gcc -O1 -pthread -o "$WK/exitrace" "$P0/src/exitrace/exitrace.c" || exit 1
-case $SUF in -) BIN=./gomin;; exitrace) BIN=./exitrace; ARG="";; *) BIN=./gomin$SUF;; esac
+[ "$SUF" = - ] && BIN=./gomin || BIN=./gomin$SUF
 snap() { local p=$1 f=$2 t live
   { ps -L -o tid,stat,pcpu,comm -p $p
     for t in /proc/$p/task/*; do echo "## $(basename $t) $(cut -d' ' -f3,14,15 $t/stat)"; sudo cat $t/syscall; sudo cat $t/stack | head -12; done
