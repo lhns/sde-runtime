@@ -190,3 +190,27 @@ jobs:
       - if: always()
         uses: actions/upload-artifact@v4
         with: { name: "out-gohang6-${{ strategy.job-index }}", path: out }
+  ofloss:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash phase0/ofloss.sh
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: out-ofloss, path: out }
+  exitrace:
+    strategy:
+      fail-fast: false
+      matrix:
+        side: [native, stock, fork]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash phase0/exitrace.sh ${{ matrix.side }}
+      - if: always()
+        run: cat out/summary.md >> "$GITHUB_STEP_SUMMARY" || true
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: "out-exitrace-${{ matrix.side }}", path: out }
