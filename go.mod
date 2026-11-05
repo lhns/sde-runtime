@@ -1,4 +1,4 @@
-module github.com/lhns/sde-runtime
+module github.com/lhns/v3compat-runtime
 
 go 1.26.2
 

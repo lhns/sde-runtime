@@ -8,9 +8,9 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/lhns/sde-runtime/internal/argv"
-	"github.com/lhns/sde-runtime/internal/config"
-	"github.com/lhns/sde-runtime/internal/spec"
+	"github.com/lhns/v3compat-runtime/internal/argv"
+	"github.com/lhns/v3compat-runtime/internal/config"
+	"github.com/lhns/v3compat-runtime/internal/spec"
 )
 
 type Deps struct {

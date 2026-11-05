@@ -1,6 +1,6 @@
 //go:build unix
 
-// sde-runtime is an OCI runtime wrapper: it rewrites the spec of containers that should run
+// v3compat-runtime is an OCI runtime wrapper: it rewrites the spec of containers that should run
 // under Intel SDE, then replaces itself with the real runtime (no fork). stdout and stderr belong
 // to the runtime protocol, so everything is logged to a file and syslog.
 package main
@@ -14,8 +14,8 @@ import (
 
 	"golang.org/x/sys/cpu"
 
-	"github.com/lhns/sde-runtime/internal/config"
-	"github.com/lhns/sde-runtime/internal/wrapper"
+	"github.com/lhns/v3compat-runtime/internal/config"
+	"github.com/lhns/v3compat-runtime/internal/wrapper"
 )
 
 func main() {
