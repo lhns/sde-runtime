@@ -37,7 +37,7 @@ if [ "$uninstall" = 1 ]; then
     exit 0
 fi
 
-[ -x "$binary" ] || { echo "no binary at $binary (go build -o sde-runtime ./cmd/sde-runtime)" >&2; exit 1; }
+[ -x "$binary" ] || { echo "no binary at $binary (go build -o sde-runtime ./cmd/v3compat-runtime)" >&2; exit 1; }
 [ -x "$bundle/sde64" ] || { echo "no SDE bundle at $bundle (run bundle/build.sh)" >&2; exit 1; }
 
 install -m 0755 "$binary" "$BIN.new"

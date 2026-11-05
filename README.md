@@ -1,4 +1,4 @@
-# sde-runtime
+# v3compat-runtime
 
 Runs container images that need x86-64-v3 (AVX2, BMI2, FMA) on older CPUs under
 [Intel SDE](https://www.intel.com/content/www/us/en/developer/articles/tool/software-development-emulator.html),
@@ -37,7 +37,7 @@ CPUs without AVX. Only the runc command line is tested; the argument handling is
 SDE is Intel's software under its own license and is never part of this repo or its releases.
 
     docker run --rm -v "$PWD":/w -w /w debian:stable bundle/build.sh --accept-intel-license
-    go build -o sde-runtime ./cmd/sde-runtime
+    go build -o sde-runtime ./cmd/v3compat-runtime
     sudo install/install.sh          # binary, bundle, config, k0s handler drop-in
     sudo install/install.sh --uninstall
 
@@ -93,7 +93,7 @@ force_on_capable_host = false            # testing: wrap even on x86-64-v3
 ## Development
 
     go test ./...
-    GOOS=linux GOARCH=amd64 go build ./cmd/sde-runtime
+    GOOS=linux GOARCH=amd64 go build ./cmd/v3compat-runtime
 
 `test/probe` exits 0 only if AVX2, FMA and BMI2 instructions return correct results. An end-to-end run
 needs the SDE bundle (not available in CI) and a node without AVX2 (for example

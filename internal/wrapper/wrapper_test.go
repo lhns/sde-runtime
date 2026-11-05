@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lhns/sde-runtime/internal/spec"
+	"github.com/lhns/v3compat-runtime/internal/spec"
 )
 
 type env struct {
